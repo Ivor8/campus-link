@@ -1,0 +1,492 @@
+/* ==================== */
+/* Enhanced Posts Section */
+/* ==================== */
+
+.posts-section {
+  background-color: white;
+  border-radius: 12px;
+  padding: 0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+/* Create Post Form */
+.create-post {
+  padding: 20px;
+  background: #ffffff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.create-post form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.create-post textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 15px;
+  border: none;
+  border-radius: 12px;
+  background: #f8f9fa;
+  resize: none;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+}
+
+.create-post textarea:focus {
+  outline: none;
+  background: #fff;
+  box-shadow: 0 0 0 2px #3498db, 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.post-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.image-upload {
+  position: relative;
+  cursor: pointer;
+  color: #7f8c8d;
+  transition: all 0.3s ease;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+.image-upload:hover {
+  background: #f0f2f5;
+  color: #3498db;
+}
+
+.image-upload input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.image-preview {
+  position: relative;
+  margin-top: 10px;
+  border-radius: 12px;
+  overflow: hidden;
+  animation: fadeIn 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.image-preview img {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.image-preview:hover img {
+  transform: scale(1.02);
+}
+
+.image-preview button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.image-preview button:hover {
+  background: rgba(0, 0, 0, 0.8);
+  transform: scale(1.1);
+}
+
+.create-post button[type="submit"] {
+  background: #3498db;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(52, 152, 219, 0.3);
+}
+
+.create-post button[type="submit"]:hover {
+  background: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+}
+
+.create-post button[type="submit"]:disabled {
+  background: #bdc3c7;
+  transform: none;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* Posts List */
+.posts-list {
+  padding: 0 20px 20px;
+}
+
+.posts-section h3 {
+  padding: 20px 20px 10px;
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.no-posts {
+  text-align: center;
+  padding: 40px 20px;
+  color: #7f8c8d;
+  animation: fadeIn 0.5s ease;
+}
+
+.no-posts p {
+  margin: 10px 0 0;
+  font-size: 0.95rem;
+}
+
+/* Individual Post Cards */
+.club-post {
+  background: white;
+  border-radius: 12px;
+  padding: 0;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  animation: slideUp 0.4s ease;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.club-post:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.post-header {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  position: relative;
+}
+
+.post-header img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 12px;
+  border: 2px solid #f1f1f1;
+}
+
+.post-header > div {
+  flex: 1;
+}
+
+.post-header h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #2c3e50;
+}
+
+.post-header small {
+  display: block;
+  font-size: 0.75rem;
+  color: #95a5a6;
+  margin-top: 2px;
+}
+
+.post-options {
+  color: #95a5a6;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.post-options:hover {
+  background: #f5f7fa;
+  color: #2c3e50;
+}
+
+.post-content {
+  padding: 0 15px 15px;
+}
+
+.post-content p {
+  margin: 0 0 15px;
+  color: #34495e;
+  line-height: 1.5;
+  font-size: 0.95rem;
+}
+
+.post-image-container {
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.post-image {
+  width: 100%;
+  max-height: 500px;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+  cursor: zoom-in;
+}
+
+.post-image:hover {
+  transform: scale(1.02);
+}
+
+.post-footer {
+  padding: 10px 15px;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+}
+
+.post-action {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+  color: #7f8c8d;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 5px 10px;
+  border-radius: 6px;
+}
+
+.post-action:hover {
+  background: #f5f7fa;
+  color: #3498db;
+}
+
+.post-action svg {
+  margin-right: 5px;
+  font-size: 1.1rem;
+}
+
+.post-action.liked {
+  color: #e74c3c;
+}
+
+/* Comments Section */
+.comment-section {
+  padding: 0 15px 15px;
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.comment-section input {
+  flex: 1;
+  padding: 10px 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 20px;
+  outline: none;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.comment-section input:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.comment-section button {
+  background: none;
+  border: none;
+  color: #3498db;
+  cursor: pointer;
+  margin-left: 10px;
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.comment-section button:hover {
+  background: rgba(52, 152, 219, 0.1);
+  transform: scale(1.1);
+}
+
+.comments-list {
+  padding: 0 15px 15px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.comment {
+  display: flex;
+  margin-bottom: 15px;
+  animation: fadeIn 0.3s ease;
+}
+
+.comment:last-child {
+  margin-bottom: 0;
+}
+
+.comment img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+  align-self: flex-start;
+}
+
+.comment-content {
+  flex: 1;
+  background: #f8f9fa;
+  padding: 10px 15px;
+  border-radius: 18px;
+}
+
+.comment-content strong {
+  display: block;
+  font-size: 0.85rem;
+  color: #2c3e50;
+  margin-bottom: 3px;
+}
+
+.comment-content p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #34495e;
+  line-height: 1.4;
+}
+
+.comment-time {
+  font-size: 0.7rem;
+  color: #95a5a6;
+  margin-top: 3px;
+  display: block;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Pinned Post Styling */
+.club-post.pinned {
+  border-left: 4px solid #3498db;
+}
+
+.pinned-badge {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(52, 152, 219, 0.1);
+  color: #3498db;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .posts-section {
+    border-radius: 0;
+  }
+  
+  .club-post {
+    margin-bottom: 15px;
+  }
+  
+  .post-header {
+    padding: 12px;
+  }
+  
+  .post-content, .post-footer {
+    padding: 0 12px 12px;
+  }
+  
+  .post-action {
+    margin-right: 15px;
+    padding: 4px 8px;
+  }
+}
+
+/* Loading State */
+.post-loading {
+  padding: 30px;
+  text-align: center;
+  color: #7f8c8d;
+}
+
+.post-loading:after {
+  content: "...";
+  animation: dots 1.5s steps(5, end) infinite;
+}
+
+@keyframes dots {
+  0%, 20% { content: "."; }
+  40% { content: ".."; }
+  60%, 100% { content: "..."; }
+}
+
+/* Empty State Enhancements */
+.no-posts {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.no-posts svg {
+  font-size: 3rem;
+  color: #bdc3c7;
+  margin-bottom: 15px;
+}
+
+.no-posts h4 {
+  margin: 0 0 10px;
+  color: #7f8c8d;
+  font-weight: 500;
+}
+
+.no-posts p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #95a5a6;
+  text-align: center;
+  max-width: 300px;
+}

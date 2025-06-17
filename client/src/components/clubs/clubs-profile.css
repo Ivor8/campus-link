@@ -269,164 +269,6 @@
   color: #7f8c8d;
 }
 
-/* Posts Section */
-.posts-section {
-  background-color: white;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.create-post {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding-bottom: 15px;
-  margin-bottom: 20px;
-  border-bottom: 1px solid #ecf0f1;
-}
-
-.create-post .user-avatar {
-  font-size: 2.5rem;
-  color: #7f8c8d;
-}
-
-.create-post input {
-  width: 100%;
-  padding: 10px 15px;
-  border: 1px solid #ddd;
-  border-radius: 20px;
-  outline: none;
-}
-
-.post-options {
-  display: flex;
-  gap: 10px;
-}
-
-.option-btn {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  background: none;
-  border: none;
-  color: #7f8c8d;
-  cursor: pointer;
-  font-size: 0.85rem;
-  padding: 5px 10px;
-  border-radius: 5px;
-}
-
-.option-btn:hover {
-  background-color: #f5f7fa;
-}
-
-.section-title {
-  margin: 20px 0 15px;
-  color: #2c3e50;
-  font-size: 1.1rem;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-/* Club Post Styles */
-.club-post {
-  background-color: white;
-  border-radius: 8px;
-  padding: 15px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-  position: relative;
-}
-
-.club-post.pinned {
-  border-left: 3px solid #3498db;
-}
-
-.pinned-badge {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background-color: #f8f9fa;
-  color: #3498db;
-  padding: 3px 8px;
-  border-radius: 3px;
-  font-size: 0.7rem;
-  display: flex;
-  align-items: center;
-  gap: 3px;
-}
-
-.post-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.poster-info {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex: 1;
-}
-
-.poster-avatar {
-  font-size: 2.5rem;
-  color: #7f8c8d;
-}
-
-.poster-info h4 {
-  margin: 0;
-  font-size: 0.95rem;
-}
-
-.post-time {
-  font-size: 0.8rem;
-  color: #7f8c8d;
-}
-
-.options-icon {
-  color: #7f8c8d;
-  cursor: pointer;
-}
-
-.post-content p {
-  margin: 0 0 10px;
-  color: #2c3e50;
-  line-height: 1.5;
-}
-
-.post-image {
-  width: 100%;
-  border-radius: 8px;
-  margin-bottom: 10px;
-  max-height: 400px;
-  object-fit: cover;
-}
-
-.post-actions {
-  display: flex;
-  gap: 15px;
-  padding-top: 10px;
-  border-top: 1px solid #ecf0f1;
-}
-
-.action-btn {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  background: none;
-  border: none;
-  color: #7f8c8d;
-  cursor: pointer;
-  font-size: 0.85rem;
-}
-
-.action-btn:hover {
-  color: #3498db;
-}
-
 /* Events Section */
 .events-section {
   background-color: white;
@@ -834,3 +676,73 @@
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   }
 }
+
+/* new styles */
+/* Members Preview Styles */
+.members-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.member-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 50px;
+}
+
+.member-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #f0f2f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.member-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.member-avatar svg {
+  font-size: 1.5rem;
+  color: #666;
+}
+
+.member-item span {
+  font-size: 0.7rem;
+  text-align: center;
+  margin-top: 0.3rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.more-members {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #f0f2f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.view-all {
+  display: block;
+  text-align: center;
+  color: var(--primary);
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+/* Posts Section */
