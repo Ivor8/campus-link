@@ -154,3 +154,21 @@ exports.deletePost = catchAsync(async (req, res, next) => {
     data: null
   });
 });
+
+// Get all posts from all clubs (for homepage feed)
+exports.getAllPosts = catchAsync(async (req, res, next) => {
+  const posts = await Post.find()
+    .populate('author', 'name profilePicture')
+    .populate('club', 'name logoImage')
+    .populate('comments.user', 'name profilePicture')
+    .sort('-createdAt')
+    .limit(50);
+
+  res.status(200).json({
+    status: 'success',
+    results: posts.length,
+    data: {
+      posts
+    }
+  });
+});

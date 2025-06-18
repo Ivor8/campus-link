@@ -234,9 +234,11 @@ async function fetchClubData() {
                   )}
                 </>
               ) : (
-                <button className="btn primary" onClick={() => {/* handle join logic */}}>
+              <Link to={`/clubs/${club._id}/apply`}>
+                <button className="btn primary">
                   <MdGroups /> Join Club
                 </button>
+              </Link>
               )}
             </div>
           </div>

@@ -37,7 +37,7 @@ function App() {
           <Route path="/clubProfile/:clubId" element={<ErrorBoundary><ClubProfile /></ErrorBoundary>} />
           <Route path="/clubs/:clubId/admin" element={<ClubAdminDashboard />} />
           <Route path="/messages" element={<ClubMessaging />} />
-          <Route path="/joinClub" element={<ClubApplicationForm />} />
+          <Route path="/clubs/:clubId/apply" element={<ClubApplicationForm />} />
           <Route path='/create-club' element={<CreateNewClub />} />
           
           {/* Removed duplicate route */}

@@ -1,64 +1,81 @@
-// 1DiKLxxp2nuo6QnA
-
-// mongodb+srv://nirttech:1DiKLxxp2nuo6QnA@cluster0.toreugz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
-
 require('dotenv').config();
 const express = require('express');
 const connectDB = require('./config/db');
-const clubAdminRoutes = require('./routes/clubAdminRoutes');
-const postRoutes = require('./routes/postRoutes');
 const cors = require('cors');
 const path = require('path');
 
-
-// Initialize Express app
+// Initialize Express
 const app = express();
 
-// Connect to Database
+// Connect Database
 connectDB();
 
-// Middleware
-app.use(cors({
-  origin: 'http://localhost:5173',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
-}));
-// Serve static files
+// 1. Enhanced CORS Configuration
+const corsOptions = {
+  origin: ['http://localhost:5173'], // Array for multiple origins
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: [
+    'Content-Type',
+    'Authorization',
+    'X-Requested-With',
+    'Accept',
+    'Origin',
+    'Access-Control-Request-Method',
+    'Access-Control-Request-Headers'
+  ],
+  credentials: true,
+  optionsSuccessStatus: 200 // Some legacy browsers choke on 204
+};
 
-app.use(express.static('public'));
+// 2. Apply CORS middleware
+app.use(cors(corsOptions));
 
-app.use(express.json()); // for parsing application/json
-app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+// 3. Explicit OPTIONS handler for all routes
+app.options('*', cors(corsOptions));
 
-// fall back route
-// app.use((req, res) => {
-//   res.status(404).json({ error: 'Route not found' });
-// });
-// error handling
-// app.use((err, req, res, next) => {
-//   console.error(err.stack);
-//   res.status(500).json({ error: 'Something went wrong!' });
-// });
-
-// Basic route for testing
-app.get('/', (req, res) => {
-  res.send('Campus Link API Running');
+// 4. Pre-flight request logger (for debugging)
+app.use((req, res, next) => {
+  if (req.method === 'OPTIONS') {
+    console.log('Pre-flight request detected:', req.headers);
+  }
+  next();
 });
-// app.use('/public', express.static(path.join(__dirname, 'public')));
+
+// Body parsing middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use('/img', express.static(path.join(__dirname, 'public/img')));
 
-// Define Routes (we'll add these later)
-app.use('/api/users', require('./routes/userRoutes'));
-app.use('/api/clubs', require('./routes/clubRoutes'));
-app.use('/api/clubadmin', require('./routes/clubAdminRoutes'));
-// app.use('/api/posts', postRoutes);
+// Route imports
+const userRoutes = require('./routes/userRoutes');
+const clubRoutes = require('./routes/clubRoutes');
+const postRoutes = require('./routes/postRoutes');
+const homePostRoute = require('./routes/homePostRoute')
+const clubAdminRoutes = require('./routes/clubAdminRoutes');
 
+
+// Mount routes
+app.use('/api/users', userRoutes);
+app.use('/api/clubs', clubRoutes);
+app.use('/api/posts', homePostRoute);
 app.use('/api', postRoutes);
-// app.use('/api/users', require('./routes/api/users'))
-// app.use('/api/clubs', require('./routes/api/clubs'));
-// app.use('/api/posts', require('./routes/api/posts'));
 
-// Set port and start server
+app.use('/api/clubadmin', clubAdminRoutes);
+app.use('/api/applications', require('./routes/clubApplicationRoutes'));
+
+// Health check
+app.get('/', (req, res) => {
+  res.status(200).json({ status: 'API running' });
+});
+
+// Error handling
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: 'Internal server error' });
+});
+
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+  console.log('CORS Configuration:', corsOptions);
+});

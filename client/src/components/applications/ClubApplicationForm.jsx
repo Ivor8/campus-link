@@ -1,9 +1,17 @@
-import React, { useState } from 'react';
-import { FaUser, FaEnvelope, FaIdCard, FaPenAlt, FaLightbulb, FaGraduationCap, FaCheck } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { 
+  FaUser, FaEnvelope, FaIdCard, FaPenAlt, 
+  FaLightbulb, FaCheck, FaSpinner, FaArrowLeft 
+} from 'react-icons/fa';
 import { motion } from 'framer-motion';
-import './ClubApplication.css'
+import './ClubApplication.css';
 
-const ClubApplicationForm = ({ clubName }) => {
+const ClubApplicationForm = () => {
+  const { clubId } = useParams();
+  const navigate = useNavigate();
+  const [clubName, setClubName] = useState('');
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -20,6 +28,8 @@ const ClubApplicationForm = ({ clubName }) => {
 
   const [submitted, setSubmitted] = useState(false);
   const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [userData, setUserData] = useState(null);
 
   const departments = [
     'Computer Science',
@@ -41,13 +51,57 @@ const ClubApplicationForm = ({ clubName }) => {
     { value: 'high', label: 'High (6+ hours/week)' }
   ];
 
+  useEffect(() => {
+    const fetchClubAndUserData = async () => {
+      try {
+        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+        if (!token) {
+          navigate('/login');
+          return;
+        }
+
+        const config = { 
+          headers: { 
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          } 
+        };
+        
+        const [clubRes, userRes] = await Promise.all([
+          axios.get(`http://localhost:5000/api/clubs/${clubId}`, config),
+          axios.get('http://localhost:5000/api/users/profile', config)
+        ]);
+
+        setClubName(clubRes.data.data.club.name);
+        setUserData(userRes.data.data.user);
+        
+        // Pre-fill user data if available
+        setFormData(prev => ({
+          ...prev,
+          fullName: userRes.data.data.user.name || '',
+          email: userRes.data.data.user.email || '',
+          matricule: userRes.data.data.user.matricule || '',
+          department: userRes.data.data.user.department || '',
+          level: userRes.data.data.user.level || '100'
+        }));
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        if (error.response?.status === 401) {
+          navigate('/login');
+        }
+      }
+    };
+
+    fetchClubAndUserData();
+  }, [clubId, navigate]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: value
     }));
-    // Clear error when user types
+    
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -72,13 +126,35 @@ const ClubApplicationForm = ({ clubName }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (validateForm()) {
-      // In a real app, you would send this data to your backend
-      console.log('Application submitted:', formData);
+    if (!validateForm()) return;
+
+    setIsSubmitting(true);
+    
+    try {
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        withCredentials: true
+      };
+
+      await axios.post(
+        `http://localhost:5000/api/applications/clubs/${clubId}`,
+        formData,
+        config
+      );
+
       setSubmitted(true);
+    } catch (error) {
+      console.error('Application submission failed:', error);
+      alert(error.response?.data?.message || 'Failed to submit application. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -98,9 +174,9 @@ const ClubApplicationForm = ({ clubName }) => {
         <p>The club admin will review your application and get back to you soon.</p>
         <button 
           className="return-button"
-          onClick={() => setSubmitted(false)}
+          onClick={() => navigate(`/clubProfile/${clubId}`)}
         >
-          Submit Another Application
+          Return to Club
         </button>
       </motion.div>
     );
@@ -113,6 +189,13 @@ const ClubApplicationForm = ({ clubName }) => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
     >
+      <button 
+        className="back-button"
+        onClick={() => navigate(-1)}
+      >
+        <FaArrowLeft /> Back
+      </button>
+
       <div className="application-header">
         <h2>Join {clubName}</h2>
         <p>Please fill out this application form to be considered for membership</p>
@@ -124,25 +207,27 @@ const ClubApplicationForm = ({ clubName }) => {
           <h3><FaUser /> Personal Information</h3>
           <div className="form-row">
             <div className={`input-group ${errors.fullName ? 'error' : ''}`}>
-              <label>Full Name</label>
+              <label>Full Name *</label>
               <input
                 type="text"
                 name="fullName"
                 value={formData.fullName}
                 onChange={handleChange}
                 placeholder="Your full name"
+                disabled={!!userData?.name}
               />
               {errors.fullName && <span className="error-message">{errors.fullName}</span>}
             </div>
 
             <div className={`input-group ${errors.email ? 'error' : ''}`}>
-              <label>University Email</label>
+              <label>University Email *</label>
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="your.email@unibamenda.edu"
+                placeholder="your.email@university.edu"
+                disabled={!!userData?.email}
               />
               {errors.email && <span className="error-message">{errors.email}</span>}
             </div>
@@ -150,23 +235,25 @@ const ClubApplicationForm = ({ clubName }) => {
 
           <div className="form-row">
             <div className={`input-group ${errors.matricule ? 'error' : ''}`}>
-              <label>Matriculation Number</label>
+              <label>Matriculation Number *</label>
               <input
                 type="text"
                 name="matricule"
                 value={formData.matricule}
                 onChange={handleChange}
                 placeholder="e.g. UB2023CS1234"
+                disabled={!!userData?.matricule}
               />
               {errors.matricule && <span className="error-message">{errors.matricule}</span>}
             </div>
 
             <div className={`input-group ${errors.department ? 'error' : ''}`}>
-              <label>Department</label>
+              <label>Department *</label>
               <select
                 name="department"
                 value={formData.department}
                 onChange={handleChange}
+                disabled={!!userData?.department}
               >
                 <option value="">Select your department</option>
                 {departments.map(dept => (
@@ -183,6 +270,7 @@ const ClubApplicationForm = ({ clubName }) => {
               name="level"
               value={formData.level}
               onChange={handleChange}
+              disabled={!!userData?.level}
             >
               {levels.map(level => (
                 <option key={level} value={level}>Level {level}</option>
@@ -278,8 +366,16 @@ const ClubApplicationForm = ({ clubName }) => {
 
         <div className="form-footer">
           <p className="required-note">* Required fields</p>
-          <button type="submit" className="submit-button">
-            Submit Application
+          <button 
+            type="submit" 
+            className="submit-button"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
+              <>
+                <FaSpinner className="spinner" /> Submitting...
+              </>
+            ) : 'Submit Application'}
           </button>
         </div>
       </form>
